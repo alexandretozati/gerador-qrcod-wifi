@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>QR Code Wi-Fi | Empresa</title>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #eef1f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .card {
+        background: #fff;
+        padding: 25px;
+        width: 420px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 5px;
+    }
+
+    p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        background: #0066cc;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #004f9e;
+    }
+
+    #download {
+        background: #28a745;
+        display: none;
+    }
+
+    #qrcode {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Gerador de QR Code Wi-Fi</h2>
+    <p>Uso corporativo</p>
+
+    <input type="text" id="ssid" placeholder="Nome da rede (SSID)">
+
+    <input type="text" id="senha" placeholder="Senha do Wi-Fi">
+
+    <select id="seguranca">
+        <option value="WPA">WPA / WPA2</option>
+        <option value="WEP">WEP</option>
+        <option value="nopass">Rede aberta</option>
+    </select>
+
+    <button onclick="gerar()">Gerar QR Code</button>
+    <button id="download" onclick="baixar()">Baixar QR Code</button>
+
+    <div id="qrcode"></div>
+</div>
+
+<script>
+    function gerar() {
+        const ssid = document.getElementById("ssid").value.trim();
+        const senha = document.getElementById("senha").value.trim();
+        const seguranca = document.getElementById("seguranca").value;
+
+        if (!ssid) {
+            alert("Informe o nome da rede (SSID)");
+            return;
+        }
+
+        if (seguranca !== "nopass" && !senha) {
+            alert("Informe a senha do Wi-Fi");
+            return;
+        }
+
+        const qrTexto = `WIFI:T:${seguranca};S:${ssid};P:${senha};;`;
+
+        const qrDiv = document.getElementById("qrcode");
+        qrDiv.innerHTML = "";
+
+        new QRCode(qrDiv, {
+            text: qrTexto,
+            width: 250,
+            height: 250,
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        setTimeout(() => {
+            document.getElementById("download").style.display = "block";
+        }, 300);
+    }
+
+    function baixar() {
+        const img = document.querySelector("#qrcode img");
+        if (!img) return;
+
+        const link = document.createElement("a");
+        link.href = img.src;
+        link.download = "wifi-qrcode.png";
+        link.click();
+    }
+</script>
+
+</body>
+</html>
