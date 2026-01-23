@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Wi-Fi | Premium</title>
+    <title>QR Code Wi-Fi | Gerador Profissional</title>
+
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --text: #2b2d42;
-            --bg: #f8f9fa;
+            --primary-color: #0066cc;
+            --accent-color: #28a745;
+            --text-dark: #333;
+            --glass-bg: rgba(255, 255, 255, 0.92);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-image: url("fundo-wifi.png"); /* Mantido seu fundo */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,162 +30,171 @@
         }
 
         .card {
-            background: #ffffff;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
             padding: 40px;
             width: 100%;
             max-width: 400px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             text-align: center;
-            transition: transform 0.3s ease;
         }
 
         h2 {
-            color: var(--primary);
-            margin-bottom: 10px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
             font-weight: 700;
         }
 
-        .subtitle {
-            color: #7d8597;
+        .desc {
+            color: #666;
             font-size: 0.9rem;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
+        /* Grupos de entrada mais organizados */
         .input-group {
-            position: relative;
-            margin-bottom: 15px;
             text-align: left;
+            margin-bottom: 15px;
         }
 
-        .input-group i {
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            margin-left: 5px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
             position: absolute;
             left: 15px;
-            top: 40px;
-            color: var(--primary);
-        }
-
-        label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-left: 5px;
+            color: #888;
         }
 
         input, select {
             width: 100%;
             padding: 12px 12px 12px 40px;
-            margin-top: 5px;
             border-radius: 12px;
-            border: 2px solid #edf2f4;
-            font-size: 14px;
-            box-sizing: border-box;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            outline: none;
             transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         input:focus, select:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
 
-        .btn-generate {
+        button {
             width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: var(--primary);
-            color: #fff;
+            padding: 14px;
+            margin-top: 10px;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: transform 0.2s, background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-generate {
+            background: var(--primary-color);
+            color: #fff;
         }
 
         .btn-generate:hover {
-            background: var(--secondary);
+            background: #0052a3;
+            transform: translateY(-2px);
         }
 
-        #result-container {
+        #download {
+            background: var(--accent-color);
+            color: white;
             display: none;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px dashed #edf2f4;
-            animation: fadeIn 0.5s ease;
+            margin-top: 20px;
         }
 
         #qrcode {
+            margin-top: 25px;
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        #qrcode img {
-            border: 10px solid #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 12px;
-            background: #2ecc71;
-            color: white;
-            text-decoration: none;
+            padding: 15px;
+            background: white;
             border-radius: 10px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
+            display: none; /* Escondido até gerar */
         }
 
+        /* Animação suave */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .show {
+            display: block !important;
+            animation: fadeIn 0.4s ease forwards;
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2><i class="fas fa-wifi"></i> Wi-Fi Connect</h2>
-    <p class="subtitle">Gere um QR Code para seus convidados</p>
+    <h2>Wi-Fi Connect</h2>
+    <p class="desc">Gere um QR Code para acesso rápido à sua rede.</p>
 
     <div class="input-group">
-        <label>Nome da Rede (SSID)</label>
-        <i class="fas fa-network-wired"></i>
-        <input type="text" id="ssid" placeholder="Ex: Minha_Rede_Casa">
+        <label>Nome da Rede</label>
+        <div class="input-wrapper">
+            <i class="fas fa-wifi"></i>
+            <input type="text" id="ssid" placeholder="Ex: Minha Casa 2G">
+        </div>
     </div>
 
     <div class="input-group">
         <label>Senha</label>
-        <i class="fas fa-lock"></i>
-        <input type="password" id="senha" placeholder="Sua senha secreta">
+        <div class="input-wrapper">
+            <i class="fas fa-key"></i>
+            <input type="password" id="senha" placeholder="••••••••">
+        </div>
     </div>
 
     <div class="input-group">
         <label>Segurança</label>
-        <i class="fas fa-shield-alt"></i>
-        <select id="seguranca">
-            <option value="WPA">WPA / WPA2 (Padrão)</option>
-            <option value="WEP">WEP (Antigo)</option>
-            <option value="nopass">Rede Aberta</option>
-        </select>
+        <div class="input-wrapper">
+            <i class="fas fa-shield-halved"></i>
+            <select id="seguranca">
+                <option value="WPA">WPA / WPA2</option>
+                <option value="WPA3">WPA3 (Mais Recente)</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Rede Aberta</option>
+            </select>
+        </div>
     </div>
 
     <button class="btn-generate" onclick="gerar()">
-        Gerar QR Code <i class="fas fa-qrcode" style="margin-left: 8px;"></i>
+        <i class="fas fa-qrcode"></i> Gerar QR Code
     </button>
 
-    <div id="result-container">
-        <div id="qrcode"></div>
-        <button class="btn-download" onclick="baixar()">
-            <i class="fas fa-download"></i> Baixar Imagem
-        </button>
-    </div>
+    <div id="qrcode"></div>
+
+    <button id="download" onclick="baixar()">
+        <i class="fas fa-download"></i> Baixar Imagem (PNG)
+    </button>
 </div>
 
 <script>
@@ -192,25 +204,37 @@
         const seguranca = document.getElementById("seguranca").value;
 
         if (!ssid) {
-            alert("Por favor, informe o nome da rede.");
+            alert("Por favor, digite o nome da rede (SSID)");
             return;
         }
 
+        if (seguranca !== "nopass" && !senha) {
+            alert("Redes protegidas precisam de senha");
+            return;
+        }
+
+        // Formatação do protocolo Wi-Fi (WPA3 usa a mesma flag de T:WPA para compatibilidade em muitos leitores)
+        // mas alguns dispositivos reconhecem WPA3 especificamente.
         const qrTexto = `WIFI:T:${seguranca};S:${ssid};P:${senha};;`;
+
         const qrDiv = document.getElementById("qrcode");
         qrDiv.innerHTML = "";
+        qrDiv.classList.add('show');
 
         new QRCode(qrDiv, {
             text: qrTexto,
             width: 200,
             height: 200,
-            colorDark : "#2b2d42",
+            colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
 
-        // Mostra o container com animação
-        document.getElementById("result-container").style.display = "block";
+        setTimeout(() => {
+            const btnDownload = document.getElementById("download");
+            btnDownload.style.display = "flex";
+            btnDownload.classList.add('show');
+        }, 300);
     }
 
     function baixar() {
@@ -219,7 +243,7 @@
 
         const link = document.createElement("a");
         link.href = img.src;
-        link.download = `wifi-${document.getElementById("ssid").value}.png`;
+        link.download = `wifi-access-${document.getElementById("ssid").value}.png`;
         link.click();
     }
 </script>
