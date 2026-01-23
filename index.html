@@ -1,100 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>QR Code Wi-Fi | Empresa</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Wi-Fi | Premium</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --text: #2b2d42;
+            --bg: #f8f9fa;
+        }
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-image: url("fundo-wifi.png");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+        .card {
+            background: #ffffff;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
+        h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
 
-    .card {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 25px;
-        width: 420px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-        text-align: center;
-    }
+        .subtitle {
+            color: #7d8597;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
 
-    h2 {
-        margin-bottom: 5px;
-    }
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+            text-align: left;
+        }
 
-    p {
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            color: var(--primary);
+        }
 
-    input, select {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-    }
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-left: 5px;
+        }
 
-    button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 12px;
-        background: #0066cc;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        font-size: 15px;
-        cursor: pointer;
-    }
+        input, select {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            margin-top: 5px;
+            border-radius: 12px;
+            border: 2px solid #edf2f4;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
 
-    button:hover {
-        background: #004f9e;
-    }
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
 
-    #download {
-        background: #28a745;
-        display: none;
-    }
+        .btn-generate {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
 
-    #qrcode {
-        margin-top: 20px;
-    }
-</style>
+        .btn-generate:hover {
+            background: var(--secondary);
+        }
+
+        #result-container {
+            display: none;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #edf2f4;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #qrcode img {
+            border: 10px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Gerador de QR Code Wi-Fi</h2>
-    <p>Escaneie para conectar automaticamente</p>
+    <h2><i class="fas fa-wifi"></i> Wi-Fi Connect</h2>
+    <p class="subtitle">Gere um QR Code para seus convidados</p>
 
-    <input type="text" id="ssid" placeholder="Nome da rede (SSID)">
+    <div class="input-group">
+        <label>Nome da Rede (SSID)</label>
+        <i class="fas fa-network-wired"></i>
+        <input type="text" id="ssid" placeholder="Ex: Minha_Rede_Casa">
+    </div>
 
-    <input type="text" id="senha" placeholder="Senha do Wi-Fi">
+    <div class="input-group">
+        <label>Senha</label>
+        <i class="fas fa-lock"></i>
+        <input type="password" id="senha" placeholder="Sua senha secreta">
+    </div>
 
-    <select id="seguranca">
-        <option value="WPA">WPA / WPA2</option>
-        <option value="WEP">WEP</option>
-        <option value="nopass">Rede aberta</option>
-    </select>
+    <div class="input-group">
+        <label>Segurança</label>
+        <i class="fas fa-shield-alt"></i>
+        <select id="seguranca">
+            <option value="WPA">WPA / WPA2 (Padrão)</option>
+            <option value="WEP">WEP (Antigo)</option>
+            <option value="nopass">Rede Aberta</option>
+        </select>
+    </div>
 
-    <button onclick="gerar()">Gerar QR Code</button>
-    <button id="download" onclick="baixar()">Baixar QR Code</button>
+    <button class="btn-generate" onclick="gerar()">
+        Gerar QR Code <i class="fas fa-qrcode" style="margin-left: 8px;"></i>
+    </button>
 
-    <div id="qrcode"></div>
+    <div id="result-container">
+        <div id="qrcode"></div>
+        <button class="btn-download" onclick="baixar()">
+            <i class="fas fa-download"></i> Baixar Imagem
+        </button>
+    </div>
 </div>
 
 <script>
@@ -104,30 +192,25 @@
         const seguranca = document.getElementById("seguranca").value;
 
         if (!ssid) {
-            alert("Informe o nome da rede (SSID)");
-            return;
-        }
-
-        if (seguranca !== "nopass" && !senha) {
-            alert("Informe a senha do Wi-Fi");
+            alert("Por favor, informe o nome da rede.");
             return;
         }
 
         const qrTexto = `WIFI:T:${seguranca};S:${ssid};P:${senha};;`;
-
         const qrDiv = document.getElementById("qrcode");
         qrDiv.innerHTML = "";
 
         new QRCode(qrDiv, {
             text: qrTexto,
-            width: 250,
-            height: 250,
-            correctLevel: QRCode.CorrectLevel.H
+            width: 200,
+            height: 200,
+            colorDark : "#2b2d42",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
         });
 
-        setTimeout(() => {
-            document.getElementById("download").style.display = "block";
-        }, 300);
+        // Mostra o container com animação
+        document.getElementById("result-container").style.display = "block";
     }
 
     function baixar() {
@@ -136,7 +219,7 @@
 
         const link = document.createElement("a");
         link.href = img.src;
-        link.download = "wifi-qrcode.png";
+        link.download = `wifi-${document.getElementById("ssid").value}.png`;
         link.click();
     }
 </script>
